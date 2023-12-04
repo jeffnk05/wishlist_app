@@ -51,6 +51,27 @@
         </div>
       </div>
     </nav>
+    {% with messages = get_flashed_messages(with_categories=true)%}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'error' %}
+          <article class="message is-danger">
+            <div class="message-header">
+              <p>{{ message }}</p>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+          </article> 
+          {% else %}
+          <article class="message is-success">
+            <div class="message-header">
+              <p>{{ message }}</p>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+          </article> 
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     <section class="section">{% block main %}{% endblock %}</section>
   </body>
   <script>
@@ -74,5 +95,19 @@
         });
       });
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // Add click event listeners to all delete buttons
+    const deleteButtons = document.querySelectorAll('.delete');
+    deleteButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        // Find the parent article and remove it
+        const article = button.closest('.message');
+        if (article) {
+          article.remove();
+        }
+      });
+    });
+  });
   </script>
 </html>
